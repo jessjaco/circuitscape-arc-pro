@@ -1,0 +1,3 @@
+[submodule "src/circuitscape-schema"]
+	path = src/circuitscape-schema
+	url = git@github.com:jessjaco/circuitscape-schema.git

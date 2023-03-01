@@ -1,26 +1,30 @@
+import json
+
 import arcpy
 
 
-class Toolbox(object):
+class Circuitscape(object):
     def __init__(self):
         """Define the toolbox (the name of the toolbox is the name of the
         .pyt file)."""
-        self.label = "Toolbox"
+        self.label = "Circuitscape"
         self.alias = ""
 
         # List of tool classes associated with this toolbox
-        self.tools = [Tool]
+        self.tools = [Run]
 
 
-class Tool(object):
+class Run(object):
     def __init__(self):
         """Define the tool (tool name is the name of the class)."""
-        self.label = "Tool"
+        self.label = "Run"
         self.description = ""
         self.canRunInBackground = False
 
     def getParameterInfo(self):
         """Define parameter definitions"""
+        schema = json.loads("circuitscape-schema/schema.json")
+        breakpoint()
         params = None
         return params
 
