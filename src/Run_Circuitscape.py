@@ -1,4 +1,8 @@
 import json
+import os 
+from typing import List
+
+from arcpy import Parameter
 
 from parameters import load_parameters, load_schema
 
@@ -17,7 +21,7 @@ class Run_Circuitscape(object):
         params = self.initial_params
         return params
 
-    def updateParameters(self, parameters):
+    def updateParameters(self, parameters: List[Parameter]):
         """Modify the values and properties of parameters before internal
         validation is performed.  This method is called whenever a parameter
         has been changed."""
@@ -27,7 +31,7 @@ class Run_Circuitscape(object):
                 parameter.filter.list = schema_for_parameter["enum"]
         return parameters
 
-    def updateMessages(self, parameters):
+    def updateMessages(self, parameters: List[Parameter]):
         """Modify the messages created by internal validation for each tool
         parameter.  This method is called after internal validation."""
         return parameters
@@ -36,6 +40,12 @@ class Run_Circuitscape(object):
         """Set whether tool is licensed to execute."""
         return True
 
-    def execute(self, parameters, messages):
+    def execute(self, parameters: List[Parameter], messages):
+        messages.addMessage("running")
+        messages.addMessage(os.path.realpath(__file__))
         """The source code of the tool."""
+        with open('test.ini', 'w') as dst:
+            for parameter in parameters:
+                dst.write(f"{parameter.name} = {parameter.value}\n")
+
         return True

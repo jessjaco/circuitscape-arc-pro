@@ -12,15 +12,16 @@ def load_schema():
 
 def load_parameters(schema: dict) -> list[Parameter]:
     return [
-        _load_parameter(name, info) 
+        _load_parameter(name, info, name in schema['required']) 
         for name, info in schema['properties'].items()
     ]
 
-def _load_parameter(name: str, info: dict) -> Parameter:
+def _load_parameter(name: str, info: dict, required: bool) -> Parameter:
     p =  Parameter(
         name = name,
         displayName = info.get('name'),
-        datatype = _get_type(info)
+        datatype = _get_type(info),
+        parameterType = "Required" if required else "Optional"
     )
 
     p.value = info.get('default')

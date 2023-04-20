@@ -1,5 +1,3 @@
-from importlib import reload
-
 from Run_Circuitscape import Run_Circuitscape
 
 
