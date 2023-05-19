@@ -1,10 +1,13 @@
 import json
-import os 
+import os
+from pathlib import Path
 from typing import List
 
 from arcpy import Parameter
 
 from parameters import load_parameters, load_schema
+from runner import run_circuitscape
+
 
 class Run_Circuitscape(object):
     def __init__(self):
@@ -26,7 +29,7 @@ class Run_Circuitscape(object):
         validation is performed.  This method is called whenever a parameter
         has been changed."""
         for parameter in parameters:
-            schema_for_parameter = self.schema['properties'][parameter.name]
+            schema_for_parameter = self.schema["properties"][parameter.name]
             if "enum" in schema_for_parameter:
                 parameter.filter.list = schema_for_parameter["enum"]
         return parameters
@@ -41,11 +44,19 @@ class Run_Circuitscape(object):
         return True
 
     def execute(self, parameters: List[Parameter], messages):
+        """The source code of the tool."""
+
         messages.addMessage("running")
         messages.addMessage(os.path.realpath(__file__))
-        """The source code of the tool."""
-        with open('test.ini', 'w') as dst:
+        config_file = Path(__file__).resolve().parent / "test.ini"
+        with open(config_file, "w") as dst:
             for parameter in parameters:
+                #                value = (
+                #                    str(parameter.value).replace("\\", "/")
+                #                    if parameter.parameterType == "DEFile"
+                #                    else parameter.value
+                #                )
                 dst.write(f"{parameter.name} = {parameter.value}\n")
 
+        run_circuitscape(config_file, messages)
         return True
