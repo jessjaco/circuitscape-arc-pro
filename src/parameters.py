@@ -45,6 +45,7 @@ def load_parameters(schema: dict) -> list[Parameter]:
         ],
     }
     _default_categories = ["General", "Resistance options", "Output"]
+    _outputs = ["output_file"]
 
     parameters = []
     for category, parameter_keys in _categories.items():
@@ -55,6 +56,7 @@ def load_parameters(schema: dict) -> list[Parameter]:
                 info=schema["properties"][name],
                 required=name in schema["required"],
                 category=None if category in _default_categories else category,
+                direction="Output" if name in _outputs else None,
             )
             parameters.append(parameter)
     return parameters
