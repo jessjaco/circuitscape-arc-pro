@@ -1,0 +1,34 @@
+name: zip-release
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout repo and submodules
+      uses: actions/checkout@master
+      with:
+        submodules: recursive
+    - name: Download Julia
+      uses: wei/wget@v1
+      with:
+        args: -O julia.zip https://julialang-s3.julialang.org/bin/winnt/x64/1.9/julia-1.9.2-win64.zip
+    - name: Unzip Julia
+      run: 7z x -osrc julia.zip && rm julia.zip
+    - name: Compress Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        directory: 'src'
+        filename: 'circuitscape-arc-pro-${{ github.ref_name}}.zip'
+        exclusions: "*.git/* *.github/*"
+    - name: Upload Release
+      uses: ncipollo/release-action@v1.12.0
+      with:
+        artifacts: "src/circuitscape-arc-pro-${{ github.ref_name}}.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
