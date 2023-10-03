@@ -9,4 +9,4 @@ class Toolbox(object):
         self.alias = "Circuitscape"
 
         # List of tool classes associated with this toolbox
-        self.tools = [Run_Circuitscape]
+        self.tools = [Run_Circuitscape, Run_Omniscape]

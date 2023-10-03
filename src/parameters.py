@@ -1,19 +1,72 @@
 import json
-import os
 from pathlib import Path
 
 from arcpy import Parameter
 
+def load_circuitscape_schema():
+    return _load_schema("schema.json")
 
-def load_schema():
-    schema_path = Path(__file__).parent / "circuitscape-schema" / "schema.json"
+def load_omniscape_schema():
+    return _load_schema("omniscape-schema.json")
+
+def _load_schema(file: str) -> dict:
+    schema_path = Path(__file__).parent / "circuitscape-schema" / file
     with schema_path.open() as f:
         schema = json.load(f)
     return schema
 
+def load_omniscape_parameters(schema: dict) -> list[Parameter]:
+    categories = {
+        "General": ["resistance_file", "source_file", "radius", "block_size"],
+        "Resistance options": [
+            "resistance_is_conductance", 
+            "source_from_resistance",
+            "r_cutoff",
+            "reclassify_resistance",
+            "reclass_table",
+            "write_reclassified_resistance"
+        ],
+        "Advanced options": [
+            "allow_different_projections",
+            "buffer",
+            "source_threshold",
+        ],
+        "Calculation options": [
+            "connect_four_neighbors_only",
+            "mask_nodata",
+            "parallelize",
+            "parallel_batch_size",
+            "precision",
+            "solver",
+        ],
+        "Mapping options": [
+            "calc_normalized_current",
+            "calc_flow_potenrial",
+            "write_raw_curmap",
+            "write_as_tif"
+        ],
+        "Conditional options": [
+            "conditional",
+            "n_conditions",
+            "condition1_file",
+            "comparison1",
+            "condition1_lower",
+            "condition1_upper",
+            "condition2_file",
+            "comparison2",
+            "condition2_lower",
+            "condition2_upper",
+            "compare_to_future",
+            "condition1_future_file",
+            "condition2_future_file"
+        ]
+        default_categories = ["General"],
+        outputs = []
+        return _load_parameters(schema, default_categories, outputs)
+    }
 
-def load_parameters(schema: dict) -> list[Parameter]:
-    _categories = {
+def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
+    categories = {
         "General": ["data_type", "scenario"],
         "Resistance options": ["habitat_file", "habitat_map_is_resistances"],
         "Output": ["output_file", "write_cur_maps"],
@@ -44,23 +97,25 @@ def load_parameters(schema: dict) -> list[Parameter]:
             "included_pairs_file",
         ],
     }
-    _default_categories = ["General", "Resistance options", "Output"]
-    _outputs = ["output_file"]
+    default_categories = ["General", "Resistance options", "Output"]
+    outputs = ["output_file"]
+    return _load_parameters(schema, default_categories, outputs)
 
+
+def _load_parameters(schema, categories, default_categories, outputs) -> list[Parameter]:
     parameters = []
-    for category, parameter_keys in _categories.items():
+    for category, parameter_keys in categories.items():
         for parameter_key in parameter_keys:
             name = parameter_key
             parameter = _load_parameter(
                 name=name,
                 info=schema["properties"][name],
                 required=name in schema["required"],
-                category=None if category in _default_categories else category,
-                direction="Output" if name in _outputs else None,
+                category=None if category in default_categories else category,
+                direction="Output" if name in outputs else None,
             )
             parameters.append(parameter)
     return parameters
-
 
 def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Parameter:
     p = Parameter(
