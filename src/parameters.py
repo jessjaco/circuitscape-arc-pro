@@ -16,8 +16,11 @@ def _load_schema(file: str) -> dict:
     return schema
 
 def load_omniscape_parameters(schema: dict) -> list[Parameter]:
+    schema['properties']['number_of_threads'] = dict(name="Number of threads", "type": "integer"
+        default=1)
+
     categories = {
-        "General": ["resistance_file", "source_file", "radius", "block_size"],
+        "General": ["project_name", "resistance_file", "source_file", "radius", "block_size"],
         "Resistance options": [
             "resistance_is_conductance", 
             "source_from_resistance",
@@ -35,14 +38,15 @@ def load_omniscape_parameters(schema: dict) -> list[Parameter]:
             "connect_four_neighbors_only",
             "mask_nodata",
             "parallelize",
+            "number_of_threads",
             "parallel_batch_size",
             "precision",
             "solver",
         ],
         "Mapping options": [
             "calc_normalized_current",
-            "calc_flow_potenrial",
-            "write_raw_curmap",
+            "calc_flow_potential",
+            "write_raw_currmap",
             "write_as_tif"
         ],
         "Conditional options": [
@@ -59,11 +63,11 @@ def load_omniscape_parameters(schema: dict) -> list[Parameter]:
             "compare_to_future",
             "condition1_future_file",
             "condition2_future_file"
-        ]
-        default_categories = ["General"],
-        outputs = []
-        return _load_parameters(schema, default_categories, outputs)
+        ] 
     }
+    default_categories = ["General"]
+    outputs = ["project_name"]
+    return _load_parameters(schema, categories, default_categories, outputs)
 
 def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
     categories = {
@@ -99,7 +103,7 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
     }
     default_categories = ["General", "Resistance options", "Output"]
     outputs = ["output_file"]
-    return _load_parameters(schema, default_categories, outputs)
+    return _load_parameters(schema, categories, default_categories, outputs)
 
 
 def _load_parameters(schema, categories, default_categories, outputs) -> list[Parameter]:
@@ -133,7 +137,9 @@ def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Paramete
 
 def _get_type(info: dict) -> str:
     type = None
-    if "type" in info:
+    if info["name"] == "Project name":
+        type = "DEFolder"
+    elif "type" in info:
         type = _get_base_type(info["type"])
     elif "$ref" in info:
         type = _get_defined_type(info["$ref"])
@@ -146,6 +152,7 @@ def _get_base_type(basetype: str, default: "GPType" = str) -> str:
         # Or could be GPLong, but this handles all numbers
         number="GPDouble",
         string="GPString",
+        integer="GPLong"
     )
     return lookup.get(basetype, default)
 
@@ -155,4 +162,6 @@ def _get_defined_type(refstring: str) -> str:
         type = "DEFile"
     elif "folder" in refstring:
         type = "DEFolder"
+    elif "integer" in refstring:
+        type = "GPDouble"
     return type

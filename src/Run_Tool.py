@@ -5,19 +5,13 @@ from typing import Callable, List
 
 from arcpy import Parameter
 
-from parameters import load_parameters, load_schema
-from runner import run_circuitscape
-
-
 class Run_Tool(object):
     def __init__(self, label:str, description:str, runner:Callable):
         """Define the tool (tool name is the name of the class)."""
         self.label = label
         self.description = description
+        self.runner = runner
         self.canRunInBackground = False
-
-        self.schema = load_schema()
-        self.initial_params = load_parameters(self.schema)
 
     def getParameterInfo(self):
         """Define parameter definitions"""
@@ -51,7 +45,8 @@ class Run_Tool(object):
         config_file = Path(__file__).resolve().parent / "test.ini"
         with open(config_file, "w") as dst:
             for parameter in parameters:
-                dst.write(f"{parameter.name} = {parameter.value}\n")
+                if parameter.value is not None:
+                    dst.write(f"{parameter.name} = {parameter.value}\n")
 
         self.runner(config_file, messages)
         return True

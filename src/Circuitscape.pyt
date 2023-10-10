@@ -1,4 +1,5 @@
 from Run_Circuitscape import Run_Circuitscape
+from Run_Omniscape import Run_Omniscape
 
 
 class Toolbox(object):
