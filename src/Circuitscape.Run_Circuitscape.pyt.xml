@@ -1,2 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="en"><Esri><CreaDate>20230304</CreaDate><CreaTime>16241300</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri></metadata>
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xml:lang="en">
+	<tool name="name" displayname="display name" toolboxalias="Circuitscape" xmlns="">
+		<parameters>
+			<params name="data_type" displayname="Data type" type="Optional" direction="Input" datatype="String" expression="{data_type}"></params>
+			<params name="scenario" displayname="Scenario" type="Required" direction="Input" datatype="String" expression="{scenario}"></params>
+			<params name="habitat_file" displayname="Raster resistance map or network/graph" type="Required" direction="Input" datatype="File" expression="{habitat_file}"></params>
+			<params name="habitat_map_is_resistances" displayname="Input map represents resistances instead of conductances" type="Optional" direction="Input" datatype="Boolean" expression="{habitat_map_is_resistances}"></params>
+			<params name="output_file" displayname="Base output file name (should end with .out)" type="Required" direction="Output" datatype="File" expression="{output_file}"></params>
+			<params name="write_cur_maps" displayname="write current maps" type="Optional" direction="Input" datatype="Boolean" expression="{write_cur_maps}"></params>
+			<params name="point_file" displayname="Point file" type="Optional" direction="Input" datatype="File" expression="{point_file}"></params>
+			<params name="polygon_file" displayname="Polygon file" type="Optional" direction="Input" datatype="File" expression="{polygon_file}"></params>
+			<params name="source_file" displayname="Source file" type="Optional" direction="Input" datatype="File" expression="{source_file}"></params>
+			<params name="ground_file" displayname="Ground file" type="Optional" direction="Input" datatype="File" expression="{ground_file}"></params>
+			<params name="log_level" displayname="Log level" type="Optional" direction="Input" datatype="String" expression="{log_level}"></params>
+			<params name="log_file" displayname="Log file" type="Optional" direction="Input" datatype="File" expression="{log_file}"></params>
+			<params name="connect_four_neighbors_only" displayname="Connect raster cells to FOUR neighbors instead of EIGHT" type="Optional" direction="Input" datatype="Boolean" expression="{connect_four_neighbors_only}"></params>
+			<params name="connect_using_avg_resistances" displayname="Use average resistance instead of conductance for connections between cells" type="Optional" direction="Input" datatype="Boolean" expression="{connect_using_avg_resistances}"></params>
+			<params name="preemptive_memory_release" displayname="Pre-emptively release memory when possible" type="Optional" direction="Input" datatype="Boolean" expression="{preemptive_memory_release}"></params>
+			<params name="low_memory_mode" displayname="Run in low-memory mode" type="Optional" direction="Input" datatype="Boolean" expression="{low_memory_mode}"></params>
+			<params name="use_unit_currents" displayname="Use unit currents (i=1) for all current sources" type="Optional" direction="Input" datatype="Boolean" expression="{use_unit_currents}"></params>
+			<params name="use_direct_grounds" displayname="Use direct connections to ground (R=0) for all ground points" type="Optional" direction="Input" datatype="Boolean" expression="{use_direct_grounds}"></params>
+			<params name="write_max_cur_maps" displayname="Write maximum current maps" type="Optional" direction="Input" datatype="Boolean" expression="{write_max_cur_maps}"></params>
+			<params name="write_cum_cur_map_only" displayname="Write cumulative current map only" type="Optional" direction="Input" datatype="Boolean" expression="{write_cum_cur_map_only}"></params>
+			<params name="set_focal_node_currents_to_zero" displayname="Set focal node currents to zero" type="Optional" direction="Input" datatype="Boolean" expression="{set_focal_node_currents_to_zero}"></params>
+			<params name="compress_grids" displayname="Compress output grids" type="Optional" direction="Input" datatype="Boolean" expression="{compress_grids}"></params>
+			<params name="log_transform_maps" displayname="Log transform current maps" type="Optional" direction="Input" datatype="Boolean" expression="{log_transform_maps}"></params>
+			<params name="use_mask" displayname="Read raster mask file" type="Optional" direction="Input" datatype="Boolean" expression="{use_mask}"></params>
+			<params name="mask_file" displayname="Raster mask file" type="Optional" direction="Input" datatype="File" expression="{mask_file}"></params>
+			<params name="use_variable_source_strengths" displayname="Use variable source strengths" type="Optional" direction="Input" datatype="Boolean" expression="{use_variable_source_strengths}"></params>
+			<params name="variable_source_file" displayname="Variable source strength file" type="Optional" direction="Input" datatype="File" expression="{variable_source_file}"></params>
+			<params name="use_included_pairs" displayname="Use included pairs" type="Optional" direction="Input" datatype="Boolean" expression="{use_included_pairs}"></params>
+			<params name="included_pairs_file" displayname="Included pairs file" type="Optional" direction="Input" datatype="File" expression="{included_pairs_file}"></params>
+		</parameters>
+	</tool>
+</metadata>

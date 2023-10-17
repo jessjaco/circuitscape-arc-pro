@@ -16,8 +16,7 @@ def _load_schema(file: str) -> dict:
     return schema
 
 def load_omniscape_parameters(schema: dict) -> list[Parameter]:
-    schema['properties']['number_of_threads'] = dict(name="Number of threads", "type": "integer"
-        default=1)
+    schema['properties']['number_of_threads'] = dict(name="Number of threads", type="integer", default=1)
 
     categories = {
         "General": ["project_name", "resistance_file", "source_file", "radius", "block_size"],
@@ -128,10 +127,10 @@ def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Paramete
         datatype=_get_type(info),
         parameterType="Required" if required else "Optional",
         **kwargs
-        # enabled = None,
     )
 
     p.value = info.get("default")
+    p.dialogReference = info.get("description")
     return p
 
 

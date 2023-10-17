@@ -1,2 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="en"><Esri><CreaDate>20231006</CreaDate><CreaTime>10292400</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri></metadata>
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xml:lang="en">
+	<tool name="name" displayname="display name" toolboxalias="Circuitscape" xmlns="">
+		<parameters>
+			<params name="project_name" displayname="Project name" type="Required" direction="Output" datatype="Folder" expression="{project_name}"></params>
+			<params name="resistance_file" displayname="Resistance file" type="Required" direction="Input" datatype="File" expression="{resistance_file}"></params>
+			<params name="source_file" displayname="Source file" type="Optional" direction="Input" datatype="File" expression="{source_file}"></params>
+			<params name="radius" displayname="Radius" type="Required" direction="Input" datatype="Long" expression="{radius}"></params>
+			<params name="block_size" displayname="Block Size" type="Optional" direction="Input" datatype="Long" expression="{block_size}"></params>
+			<params name="resistance_is_conductance" displayname="Resistance is conductance" type="Optional" direction="Input" datatype="Boolean" expression="{resistance_is_conductance}"></params>
+			<params name="source_from_resistance" displayname="Source from resistance" type="Optional" direction="Input" datatype="Boolean" expression="{source_from_resistance}"></params>
+			<params name="r_cutoff" displayname="Resistance cutoff" type="Optional" direction="Input" datatype="Double" expression="{r_cutoff}"></params>
+			<params name="reclassify_resistance" displayname="Reclassify resistance" type="Optional" direction="Input" datatype="Boolean" expression="{reclassify_resistance}"></params>
+			<params name="reclass_table" displayname="Path to reclass table" type="Optional" direction="Input" datatype="File" expression="{reclass_table}"></params>
+			<params name="write_reclassified_resistance" displayname="Write reclassified resistance" type="Optional" direction="Input" datatype="Boolean" expression="{write_reclassified_resistance}"></params>
+			<params name="allow_different_projections" displayname="Allow different projections" type="Optional" direction="Input" datatype="Boolean" expression="{allow_different_projections}"></params>
+			<params name="buffer" displayname="Additional buffer distance" type="Optional" direction="Input" datatype="Double" expression="{buffer}"></params>
+			<params name="source_threshold" displayname="Source threshold" type="Optional" direction="Input" datatype="Double" expression="{source_threshold}"></params>
+			<params name="connect_four_neighbors_only" displayname="Connect four neighbors only" type="Optional" direction="Input" datatype="Boolean" expression="{connect_four_neighbors_only}"></params>
+			<params name="mask_nodata" displayname="Mask nodata values" type="Optional" direction="Input" datatype="Boolean" expression="{mask_nodata}"></params>
+			<params name="parallelize" displayname="Parallelize" type="Optional" direction="Input" datatype="Boolean" expression="{parallelize}"></params>
+			<params name="number_of_threads" displayname="Number of threads" type="Optional" direction="Input" datatype="Long" expression="{number_of_threads}"></params>
+			<params name="parallel_batch_size" displayname="Parallel batch size" type="Optional" direction="Input" datatype="Double" expression="{parallel_batch_size}"></params>
+			<params name="precision" displayname="Precision" type="Optional" direction="Input" datatype="String" expression="{precision}"></params>
+			<params name="solver" displayname="Solver" type="Optional" direction="Input" datatype="String" expression="{solver}"></params>
+			<params name="calc_normalized_current" displayname="Calculate normalized current" type="Optional" direction="Input" datatype="Boolean" expression="{calc_normalized_current}"></params>
+			<params name="calc_flow_potential" displayname="Calculate flow potential" type="Optional" direction="Input" datatype="Boolean" expression="{calc_flow_potential}"></params>
+			<params name="write_raw_currmap" displayname="Write raw current map" type="Optional" direction="Input" datatype="Boolean" expression="{write_raw_currmap}"></params>
+			<params name="write_as_tif" displayname="Write output as tiff?" type="Optional" direction="Input" datatype="Boolean" expression="{write_as_tif}"></params>
+			<params name="conditional" displayname="Should conditional connectivity be used?" type="Optional" direction="Input" datatype="Boolean" expression="{conditional}"></params>
+			<params name="n_conditions" displayname="Number of conditional conditions" type="Optional" direction="Input" datatype="Double" expression="{n_conditions}"></params>
+			<params name="condition1_file" displayname="Path to condition 1 file" type="Optional" direction="Input" datatype="File" expression="{condition1_file}"></params>
+			<params name="comparison1" displayname="" type="Optional" direction="Input" datatype="String" expression="{comparison1}"></params>
+			<params name="condition1_lower" displayname="" type="Optional" direction="Input" datatype="Double" expression="{condition1_lower}"></params>
+			<params name="condition1_upper" displayname="" type="Optional" direction="Input" datatype="Double" expression="{condition1_upper}"></params>
+			<params name="condition2_file" displayname="Path to condition 2 file" type="Optional" direction="Input" datatype="File" expression="{condition2_file}"></params>
+			<params name="comparison2" displayname="" type="Optional" direction="Input" datatype="String" expression="{comparison2}"></params>
+			<params name="condition2_lower" displayname="" type="Optional" direction="Input" datatype="Double" expression="{condition2_lower}"></params>
+			<params name="condition2_upper" displayname="" type="Optional" direction="Input" datatype="Double" expression="{condition2_upper}"></params>
+			<params name="compare_to_future" displayname="Which condition to compare to future?" type="Optional" direction="Input" datatype="String" expression="{compare_to_future}"></params>
+			<params name="condition1_future_file" displayname="Path to condition 1 future file" type="Optional" direction="Input" datatype="File" expression="{condition1_future_file}"></params>
+			<params name="condition2_future_file" displayname="Path to condition 2 future file" type="Optional" direction="Input" datatype="File" expression="{condition2_future_file}"></params>
+		</parameters>
+	</tool>
+</metadata>
