@@ -130,7 +130,7 @@ def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Paramete
     )
 
     p.value = info.get("default")
-    p.dialogReference = info.get("description")
+    p.description = info.get("description")
     return p
 
 

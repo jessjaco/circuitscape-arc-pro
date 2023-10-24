@@ -1,6 +1,6 @@
 """This module writes the xml metadata for tools. For now, it is using a subset of what is created when
 a tool is loaded in Arc Pro. Note that the xmltodict package is required to create the xml, so this
-cannot be run in the stock Arc Pro environment. But it does need to be. It should only be run upon
+cannot be run in the stock Arc Pro environment. But it does not need to be. It should only be run upon
 build. Also note, if you load the tool in Arc Pro the output may be overwritten.
 
 To get this to run, follow these instructions: 
@@ -25,16 +25,16 @@ from parameters import (
     load_omniscape_schema
 )
 
-def write_metadata(parameters: List, tool_name: str, output_path: Path) -> None:
+def write_metadata(parameters: List, name: str, display_name:str, output_path: Path) -> None:
     metadict = {
         "metadata": {
             "@xml:lang":"en",
             "tool": { 
-                "@name":"name", 
-                "@displayname": "display name",
+                "@name":name, 
+                "@displayname": display_name,
                 "@toolboxalias": "Circuitscape",
                 "@xmlns": "",
-                "parameters": { "params": _parse_parameters(parameters) }
+                "parameters": { "param": _parse_parameters(parameters) }
             }
         }
     }
@@ -53,18 +53,20 @@ def _parse_parameter(parameter: Parameter) -> Dict:
         "@datatype": parameter.datatype,
         "@expression": f"{{{parameter.name}}}",
         # reverse-engineered style string from some edited metadata, all this html may not be required.
-        # "dialogReference": f'&lt;DIV STYLE="text-align:Left;"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;{parameter.dialogReference}&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;'
+        "dialogReference": f'<DIV STYLE="text-align:Left"><DIV><DIV><P><SPAN>{parameter.description}</SPAN></P></DIV></DIV></DIV>'
     }
 
 if __name__ == "__main__":
     write_metadata(
         parameters=load_circuitscape_parameters(load_circuitscape_schema()),
-        tool_name="Run Circuitscape",
+        name="Run_Circuitscape",
+        display_name="Run Circuitscape",
         output_path="src/Circuitscape.Run_Circuitscape.pyt.xml"
     )
 
     write_metadata(
         parameters=load_omniscape_parameters(load_omniscape_schema()),
-        tool_name="Run Omniscape",
+        name="Run_Omniscape",
+        display_name="Run Omniscape",
         output_path="src/Circuitscape.Run_Omniscape.pyt.xml"
     )
