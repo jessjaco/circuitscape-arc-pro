@@ -7,7 +7,7 @@ def run_circuitscape(config_file: Path, messages) -> None:
     wrking_dir = str(working_dir).replace("\\", "/")
     cfg_file = str(config_file).replace("\\", "/")
     julia_exe = working_dir / "julia-1.9.2/bin/julia.exe"
-    julia_script = f'"using Pkg; Pkg.activate(\\"{wrking_dir}\\"); Pkg.instantiate(); using Circuitscape; compute(\\"{cfg_file}\\")"'
+    julia_script = f'"using Pkg; Pkg.activate(realpath(\\"{wrking_dir}\\")); Pkg.instantiate(); using Circuitscape; compute(realpath(\\"{cfg_file}\\"))"'
     full_command = f"{julia_exe} -e {julia_script}"
     messages.addMessage(full_command)
     proc = Popen(full_command, stdout=PIPE, stderr=STDOUT)
