@@ -16,7 +16,7 @@ def _load_schema(file: str) -> dict:
     return schema
 
 def load_omniscape_parameters(schema: dict) -> list[Parameter]:
-    schema['properties']['number_of_threads'] = dict(name="Number of threads", type="integer", default=1)
+    schema['properties']['threads'] = dict(name="Number of threads", type="integer", default=1)
 
     categories = {
         "General": ["project_name", "resistance_file", "source_file", "radius", "block_size"],
@@ -37,7 +37,7 @@ def load_omniscape_parameters(schema: dict) -> list[Parameter]:
             "connect_four_neighbors_only",
             "mask_nodata",
             "parallelize",
-            "number_of_threads",
+            "threads",
             "parallel_batch_size",
             "precision",
             "solver",

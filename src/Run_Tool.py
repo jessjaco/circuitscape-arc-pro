@@ -5,13 +5,21 @@ from typing import Callable, List
 
 from arcpy import Parameter
 
+
 class Run_Tool(object):
-    def __init__(self, label:str, description:str, runner:Callable):
+    def __init__(
+        self,
+        label: str,
+        description: str,
+        runner: Callable,
+        commandArgParameterNames: list = [],
+    ):
         """Define the tool (tool name is the name of the class)."""
         self.label = label
         self.description = description
         self.runner = runner
         self.canRunInBackground = False
+        self.commandArgParameterNames = commandArgParameterNames
 
     def getParameterInfo(self):
         """Define parameter definitions"""
@@ -43,10 +51,14 @@ class Run_Tool(object):
         messages.addMessage("running")
         messages.addMessage(os.path.realpath(__file__))
         config_file = Path(__file__).resolve().parent / "test.ini"
+        command_args = dict()
         with open(config_file, "w") as dst:
             for parameter in parameters:
-                if parameter.value is not None:
+                if parameter.name in self.commandArgParameterNames:
+                    messages.addMessage(parameter)
+                    command_args[parameter.name] = parameter.value
+                elif parameter.value is not None:
                     dst.write(f"{parameter.name} = {parameter.value}\n")
 
-        self.runner(config_file, messages)
+        self.runner(config_file, messages, command_args)
         return True
