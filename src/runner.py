@@ -9,12 +9,11 @@ def run_ascape(
     working_dir = Path(__file__).resolve().parent
     wrking_dir = str(working_dir).replace("\\", "/")
     cfg_file = str(config_file).replace("\\", "/")
-    julia_command = "julia-1.9.2/bin/julia.exe"
+    julia_command = "julia-1.10.0/bin/julia.exe"
     for k, v in command_args.items():
         # Only supports full kw args
         julia_command += f" --{k} {v}"
     julia_exe = working_dir / julia_command
-
     julia_script = get_script(wrking_dir, cfg_file)
     full_command = f"{julia_exe} -e {julia_script}"
     messages.addMessage(full_command)
@@ -29,13 +28,13 @@ def run_ascape(
 
 def run_omniscape(config_file: Path, messages, command_args) -> None:
     julia_script = (
-        lambda working_dir, config_file: f'"using Pkg; Pkg.activate(\\"{working_dir}\\"); Pkg.instantiate(); using Omniscape; run_omniscape(\\"{config_file}\\")"'
+        lambda working_dir, config_file: f'"using Pkg; Pkg.activate(realpath(\\"{working_dir}\\")); Pkg.instantiate(); using Omniscape; run_omniscape(realpath(\\"{config_file}\\"))"'
     )
     return run_ascape(julia_script, config_file, command_args, messages)
 
 
 def run_circuitscape(config_file: Path, messages, command_args) -> None:
     julia_script = (
-        lambda working_dir, config_file: f'"using Pkg; Pkg.activate(\\"{working_dir}\\"); Pkg.instantiate(); using Circuitscape; compute(\\"{config_file}\\")"'
+        lambda working_dir, config_file: f'"using Pkg; Pkg.activate(realpath(\\"{working_dir}\\")); Pkg.instantiate(); using Circuitscape; compute(realpath(\\"{config_file}\\"))"'
     )
     return run_ascape(julia_script, config_file, command_args, messages)
