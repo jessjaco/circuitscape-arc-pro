@@ -1,4 +1,5 @@
 from Run_Circuitscape import Run_Circuitscape
+from Run_Omniscape import Run_Omniscape
 
 
 class Toolbox(object):
@@ -9,4 +10,4 @@ class Toolbox(object):
         self.alias = "Circuitscape"
 
         # List of tool classes associated with this toolbox
-        self.tools = [Run_Circuitscape]
+        self.tools = [Run_Circuitscape, Run_Omniscape]

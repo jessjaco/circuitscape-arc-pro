@@ -1,2 +1,94 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata xml:lang="en"><Esri><CreaDate>20230304</CreaDate><CreaTime>16241300</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce></Esri></metadata>
+<?xml version="1.0" encoding="utf-8"?>
+<metadata xml:lang="en">
+	<tool name="Run_Circuitscape" displayname="Run Circuitscape" toolboxalias="Circuitscape" xmlns="">
+		<parameters>
+			<param name="data_type" displayname="Data type" type="Optional" direction="Input" datatype="String" expression="{data_type}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Will you be analyzing raster or network data?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="scenario" displayname="Scenario" type="Required" direction="Input" datatype="String" expression="{scenario}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Modeling mode&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="habitat_file" displayname="Habitat file" type="Required" direction="Input" datatype="File" expression="{habitat_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Raster resistance map or network/graph&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="habitat_map_is_resistances" displayname="Habitat map is resistances" type="Optional" direction="Input" datatype="Boolean" expression="{habitat_map_is_resistances}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Input map represents resistances instead of conductances?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="output_file" displayname="Base output file name (should end with .out)" type="Required" direction="Output" datatype="File" expression="{output_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Choose a directory path and base file name for output files. Resistances, current maps, voltage maps, and configuration files (which save user interface settings and have a .ini extension) will all use this base name, along with appropriate suffixes and extensions.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="write_cur_maps" displayname="Write current maps" type="Optional" direction="Input" datatype="Boolean" expression="{write_cur_maps}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Write output current maps?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="point_file" displayname="Point file" type="Optional" direction="Input" datatype="File" expression="{point_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This file specifies locations of ground nodes and resistances or conductances of resistors tying them to ground (Figs. 7 and 11). Either a raster or a text list may be used. Rasters must have the same cell size, projection, and extent as the resistance grid, and cells that do not contain grounds should be coded with NODATA values. Note that if a direct (R = 0) ground connection conflicts with a current source, the ground will be removed unless the 'remove source' option in the Options Window is chosen.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="polygon_file" displayname="Polygon file" type="Optional" direction="Input" datatype="File" expression="{polygon_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This file specifies locations of nodes between which effective resistance and current flow are to be calculated. Each focal node should have a unique positive integer ID. Files may be text lists specifying coordinates or appropriate raster grid formats. When a grid is used, it must have the same cell size and extent as the resistance grid. The value stored in each grid cell location refers to the focal node ID. Cells that do not contain focal nodes should be coded with NODATA values. When a text list is used, the value field references the focal node ID.  For raster analyses, focal nodes may occur at points (single cells on the resistance grid) or across regions (Fig. 8). For the latter, a single ID would occupymore than one cell in a grid or more than one pair of coordinates in a text list (and falling within more than one cell in the underlying resistance grid). Cells within a single region would then be collapsed into a single node, as they are when short-circuit region files are used (see below). The difference is that a focal region will be 'burned in' to the resistance grid only for pairwise calculations that include that focal node. As with short-circuit regions, focal regions need not be made up of contiguous cells. For large grids or large numbers of focal nodes, focal regions may require more computation time. When calculating resistances on large raster grids and not creating voltage or current maps, focal points will run much more quickly.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="source_file" displayname="Source file" type="Optional" direction="Input" datatype="File" expression="{source_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This file specifies locations and strengths, in amps, of current sources. Either a raster or a text list may be used. Rasters must have the same cell size, projection, and extent as the resistance grid, and cells that do not contain current sources should be coded with NODATA values. Note: current sources may be positive or negative (i.e., they may inject current into the grid or pull current out. Similarly, grounds may either serve as a sink for current or may contribute current if there are negative current sources in the grid).&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="ground_file" displayname="Ground file" type="Optional" direction="Input" datatype="File" expression="{ground_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This file specifies locations of ground nodes and resistances or conductances of resistors tying them to ground. Either a raster or a text list may be used. Rasters must have the same cell size, projection, and extent as the resistance grid, and cells that do not contain grounds should be coded with NODATA values. Note that if a direct (R = 0) ground connection conflicts with a current source, the ground will be removed unless the 'remove source' option in the Options Window is chosen.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="log_level" displayname="Log level" type="Optional" direction="Input" datatype="String" expression="{log_level}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;The level of logging.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="log_file" displayname="Log file" type="Optional" direction="Input" datatype="File" expression="{log_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;A file to write logs.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="connect_four_neighbors_only" displayname="Connect four neighbors only" type="Optional" direction="Input" datatype="Boolean" expression="{connect_four_neighbors_only}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Connect raster cells to FOUR neighbors instead of EIGHT&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="connect_using_avg_resistances" displayname="Connect using average resistance" type="Optional" direction="Input" datatype="Boolean" expression="{connect_using_avg_resistances}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Use average resistance instead of conductance for connections between cells&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="preemptive_memory_release" displayname="Pre-emptive memory release" type="Optional" direction="Input" datatype="Boolean" expression="{preemptive_memory_release}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Pre-emptively release memory when possible?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="low_memory_mode" displayname="Run in low-memory mode" type="Optional" direction="Input" datatype="Boolean" expression="{low_memory_mode}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Run in low-memory mode?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="use_unit_currents" displayname="Use unit currents" type="Optional" direction="Input" datatype="Boolean" expression="{use_unit_currents}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Use unit currents (i=1) for all current sources?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="use_direct_grounds" displayname="Use direct grounds" type="Optional" direction="Input" datatype="Boolean" expression="{use_direct_grounds}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Use direct connections to ground (R=0) for all ground points&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="write_max_cur_maps" displayname="Write maximum current maps" type="Optional" direction="Input" datatype="Boolean" expression="{write_max_cur_maps}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Write maximum current maps?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="write_cum_cur_map_only" displayname="Write cumulative current map only" type="Optional" direction="Input" datatype="Boolean" expression="{write_cum_cur_map_only}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Write cumulative current map only?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="set_focal_node_currents_to_zero" displayname="Set focal node currents to zero" type="Optional" direction="Input" datatype="Boolean" expression="{set_focal_node_currents_to_zero}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;When running raster data in pairwise, all-to-one, and one-to all modes, focal nodes will have zero current in output maps when they are activated. For pairwise mode, cumulative maps will still show currents flowing through focal regions that results from other pairs being activated. This helps to show current flowing through a focal region as it moves between other focal regions in cumulative current maps. This current passing through a focal region can give an idea of the importance of the focal region for connecting other focal region pairs (for an example, see Fig. 5 in Dickson et al. 2013).&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="compress_grids" displayname="Compress output grids" type="Optional" direction="Input" datatype="Boolean" expression="{compress_grids}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Output ASCII grids are automatically compressed using the gzip file format. This can be useful when many large maps will be written.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="log_transform_maps" displayname="Log transform current maps" type="Optional" direction="Input" datatype="Boolean" expression="{log_transform_maps}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Values in output current maps will reflect a log10 transform of current densities, which can be useful for visualizing them in some GIS packages (e.g., ArcView 3.X). Cells with zero current will be re-coded with NODATA values.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="use_mask" displayname="Use raster mask file" type="Optional" direction="Input" datatype="Boolean" expression="{use_mask}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Cells with negative, zero, or NODATA values in the mask will be dropped from the corresponding resistance map (i.e., treated as complete barriers). Positive integer cells will be retained. File should only contain integers and be in raster format.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="mask_file" displayname="Raster mask file" type="Optional" direction="Input" datatype="File" expression="{mask_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Cells with negative, zero, or NODATA values in the mask will be dropped from the corresponding resistance map (i.e., treated as complete barriers). Positive integer cells will be retained. File should only contain integers and be in raster format&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="use_variable_source_strengths" displayname="Use variable source strengths" type="Optional" direction="Input" datatype="Boolean" expression="{use_variable_source_strengths}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Use variable source strengths?&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="variable_source_file" displayname="Variable source strength file" type="Optional" direction="Input" datatype="File" expression="{variable_source_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;Path to variable source strength file&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="use_included_pairs" displayname="Use included pairs" type="Optional" direction="Input" datatype="Boolean" expression="{use_included_pairs}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This option allows users to only perform calculations on a subset of focal node pairs. Users can either identify pairs to include in calculations, or pairs to exclude, as specified in the first line of the file. This affects all modes except the Advanced Mode. Files should be in tab-delimited text with a .txt extension.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+			<param name="included_pairs_file" displayname="Included pairs file" type="Optional" direction="Input" datatype="File" expression="{included_pairs_file}">
+				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;This option allows users to only perform calculations on a subset of focal node pairs. Users can either identify pairs to include in calculations, or pairs to exclude, as specified in the first line of the file.This affects all modes except the Advanced Mode. Files should be in tab-delimited text with a .txt extension.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
+			</param>
+		</parameters>
+	</tool>
+</metadata>

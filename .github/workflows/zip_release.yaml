@@ -16,7 +16,7 @@ jobs:
     - name: Download Julia
       uses: wei/wget@v1
       with:
-        args: -O julia.zip https://julialang-s3.julialang.org/bin/winnt/x64/1.9/julia-1.9.2-win64.zip
+        args: -O julia.zip https://julialang-s3.julialang.org/bin/winnt/x64/1.10/julia-1.10.0-win64.zip
     - name: Unzip Julia
       run: 7z x -osrc julia.zip && rm julia.zip
     - name: Compress Release

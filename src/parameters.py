@@ -1,19 +1,75 @@
 import json
-import os
 from pathlib import Path
 
 from arcpy import Parameter
 
+def load_circuitscape_schema():
+    return _load_schema("schema.json")
 
-def load_schema():
-    schema_path = Path(__file__).parent / "circuitscape-schema" / "schema.json"
+def load_omniscape_schema():
+    return _load_schema("omniscape-schema.json")
+
+def _load_schema(file: str) -> dict:
+    schema_path = Path(__file__).parent / "circuitscape-schema" / file
     with schema_path.open() as f:
         schema = json.load(f)
     return schema
 
+def load_omniscape_parameters(schema: dict) -> list[Parameter]:
+    schema['properties']['threads'] = dict(name="Number of threads", type="integer", default=1)
 
-def load_parameters(schema: dict) -> list[Parameter]:
-    _categories = {
+    categories = {
+        "General": ["project_name", "resistance_file", "source_file", "radius", "block_size"],
+        "Resistance options": [
+            "resistance_is_conductance", 
+            "source_from_resistance",
+            "r_cutoff",
+            "reclassify_resistance",
+            "reclass_table",
+            "write_reclassified_resistance"
+        ],
+        "Advanced options": [
+            "allow_different_projections",
+            "buffer",
+            "source_threshold",
+        ],
+        "Calculation options": [
+            "connect_four_neighbors_only",
+            "mask_nodata",
+            "parallelize",
+            "threads",
+            "parallel_batch_size",
+            "precision",
+            "solver",
+        ],
+        "Mapping options": [
+            "calc_normalized_current",
+            "calc_flow_potential",
+            "write_raw_currmap",
+            "write_as_tif"
+        ],
+        "Conditional options": [
+            "conditional",
+            "n_conditions",
+            "condition1_file",
+            "comparison1",
+            "condition1_lower",
+            "condition1_upper",
+            "condition2_file",
+            "comparison2",
+            "condition2_lower",
+            "condition2_upper",
+            "compare_to_future",
+            "condition1_future_file",
+            "condition2_future_file"
+        ] 
+    }
+    default_categories = ["General"]
+    outputs = ["project_name"]
+    return _load_parameters(schema, categories, default_categories, outputs)
+
+def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
+    categories = {
         "General": ["data_type", "scenario"],
         "Resistance options": ["habitat_file", "habitat_map_is_resistances"],
         "Output": ["output_file", "write_cur_maps"],
@@ -44,23 +100,25 @@ def load_parameters(schema: dict) -> list[Parameter]:
             "included_pairs_file",
         ],
     }
-    _default_categories = ["General", "Resistance options", "Output"]
-    _outputs = ["output_file"]
+    default_categories = ["General", "Resistance options", "Output"]
+    outputs = ["output_file"]
+    return _load_parameters(schema, categories, default_categories, outputs)
 
+
+def _load_parameters(schema, categories, default_categories, outputs) -> list[Parameter]:
     parameters = []
-    for category, parameter_keys in _categories.items():
+    for category, parameter_keys in categories.items():
         for parameter_key in parameter_keys:
             name = parameter_key
             parameter = _load_parameter(
                 name=name,
                 info=schema["properties"][name],
                 required=name in schema["required"],
-                category=None if category in _default_categories else category,
-                direction="Output" if name in _outputs else None,
+                category=None if category in default_categories else category,
+                direction="Output" if name in outputs else None,
             )
             parameters.append(parameter)
     return parameters
-
 
 def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Parameter:
     p = Parameter(
@@ -69,16 +127,18 @@ def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Paramete
         datatype=_get_type(info),
         parameterType="Required" if required else "Optional",
         **kwargs
-        # enabled = None,
     )
 
     p.value = info.get("default")
+    p.description = info.get("description")
     return p
 
 
 def _get_type(info: dict) -> str:
     type = None
-    if "type" in info:
+    if info["name"] == "Project name":
+        type = "DEFolder"
+    elif "type" in info:
         type = _get_base_type(info["type"])
     elif "$ref" in info:
         type = _get_defined_type(info["$ref"])
@@ -91,6 +151,7 @@ def _get_base_type(basetype: str, default: "GPType" = str) -> str:
         # Or could be GPLong, but this handles all numbers
         number="GPDouble",
         string="GPString",
+        integer="GPLong"
     )
     return lookup.get(basetype, default)
 
@@ -100,4 +161,6 @@ def _get_defined_type(refstring: str) -> str:
         type = "DEFile"
     elif "folder" in refstring:
         type = "DEFolder"
+    elif "integer" in refstring:
+        type = "GPDouble"
     return type
