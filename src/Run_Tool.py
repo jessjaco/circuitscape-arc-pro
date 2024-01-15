@@ -50,12 +50,11 @@ class Run_Tool(object):
 
         messages.addMessage("running")
         messages.addMessage(os.path.realpath(__file__))
-        config_file = Path(__file__).resolve().parent / "test.ini"
+        config_file = Path(__file__).resolve().parent / "last_config.ini"
         command_args = dict()
         with open(config_file, "w") as dst:
             for parameter in parameters:
                 if parameter.name in self.commandArgParameterNames:
-                    messages.addMessage(parameter)
                     command_args[parameter.name] = parameter.value
                 elif parameter.value is not None:
                     dst.write(f"{parameter.name} = {parameter.value}\n")

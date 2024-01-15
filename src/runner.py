@@ -21,7 +21,10 @@ def run_ascape(
     proc = Popen(full_command, stdout=PIPE, stderr=PIPE)
     stdout_iterator = iter(proc.stderr.readline, b"")
     for line in stdout_iterator:
-        messages.addMessage(line.rstrip())
+        if b"ERROR" in line:
+            messages.addErrorMessage(line.rstrip())
+        else:
+            messages.addMessage(line.rstrip())
 
 
 def run_omniscape(config_file: Path, messages, command_args) -> None:
