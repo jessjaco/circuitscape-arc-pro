@@ -8,7 +8,7 @@ To install, follow instructions in [src/INSTALL.md](src/INSTALL.md).
 ## Versions
 
 The versions of Circuitscape, Omniscape, and Julia used in this tool are defined in [Project.toml](src/Project.toml) 
-and the [packaging workflow](.github\workflows\zip_release.yaml); these will be periodically updated.
+and the [packaging workflow](.github/workflows/zip_release.yaml); these will be periodically updated.
 
 Since Arc Pro typically updates automatically, it is difficult to test across different versions. This tool was created
 using Arc Pro 3.x series (last tested version: 3.2.1).

@@ -1,5 +1,5 @@
 from pathlib import Path
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, STDOUT, CREATE_NO_WINDOW
 from typing import Callable
 
 
@@ -17,9 +17,14 @@ def run_ascape(
     julia_script = get_script(wrking_dir, cfg_file)
     full_command = f"{julia_exe} -e {julia_script}"
     messages.addMessage(full_command)
-    proc = Popen(full_command, stdout=PIPE, stderr=PIPE)
-    stdout_iterator = iter(proc.stderr.readline, b"")
-    for line in stdout_iterator:
+    proc = Popen(
+        full_command,
+        bufsize=0,
+        stdout=PIPE,
+        stderr=PIPE,
+        creationflags=CREATE_NO_WINDOW,
+    )
+    for line in iter(proc.stderr.readline, b""):
         if b"ERROR" in line:
             messages.addErrorMessage(line.rstrip())
         else:
