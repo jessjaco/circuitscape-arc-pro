@@ -32,3 +32,8 @@ Using the 'cancel' option in a running tool is typically ineffective (Arc Pro on
 lines). To cancel a running process, you will need to exit Arc Pro completely (or kill it in task manager).
 1. Errors do not always show as failed runs in Arc Pro. To be sure, click "View Details".
 1. The tool does not respect any environment settings in Arc Pro.
+
+## Acknowledgements
+
+The tool was authored by Jesse Anderson and guided by Kimberly Hall with The Nature Conservancy. Funding for this
+project was provided by The Wilburforce Foundation.
