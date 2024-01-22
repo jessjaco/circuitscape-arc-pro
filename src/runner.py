@@ -17,18 +17,19 @@ def run_ascape(
     julia_script = get_script(wrking_dir, cfg_file)
     full_command = f"{julia_exe} -e {julia_script}"
     messages.addMessage(full_command)
-    proc = Popen(
+    with Popen(
         full_command,
-        bufsize=0,
         stdout=PIPE,
-        stderr=PIPE,
+        stderr=STDOUT,
         creationflags=CREATE_NO_WINDOW,
-    )
-    for line in iter(proc.stderr.readline, b""):
-        if b"ERROR" in line:
-            messages.addErrorMessage(line.rstrip())
-        else:
-            messages.addMessage(line.rstrip())
+        bufsize=1,
+        encoding="utf-8",
+    ) as proc:
+        for line in proc.stdout:
+            if "ERROR" in line:
+                messages.addErrorMessage(line)
+            else:
+                messages.addMessage(line)
 
 
 def run_omniscape(config_file: Path, messages, command_args) -> None:
