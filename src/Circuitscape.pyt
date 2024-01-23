@@ -1,13 +1,15 @@
-from Run_Circuitscape import Run_Circuitscape
-from Run_Omniscape import Run_Omniscape
+"""This is the entrypoint (from Arc Pro's perspective) for the tool and 
+is what is loaded when a user selects "Add Toolbox".
+"""
+from tools import Run_Circuitscape, Run_Omniscape
 
 
 class Toolbox(object):
     def __init__(self):
         """Define the toolbox (the name of the toolbox is the name of the
-        .pyt file)."""
+        .pyt file). It containes two tools."""
         self.label = "Circuitscape"
         self.alias = "Circuitscape"
 
-        # List of tool classes associated with this toolbox
         self.tools = [Run_Circuitscape, Run_Omniscape]
+

@@ -1,13 +1,24 @@
+"""This file contains code to convert the schemas for CS and OS into lists
+of arcpy parameters to be consumed by the tools. The schemas are loaded more
+or less exactly as written. The majority of the code here is to 
+1) Convert types in the schema to corresponding parameter types
+2) Categorize parameters based on where we want them to fall in the GUI. This
+could be done in the schema in some way, but I think that would only be 
+needed if these categories were used somewhere else.
+"""
 import json
 from pathlib import Path
 
 from arcpy import Parameter
 
+
 def load_circuitscape_schema():
     return _load_schema("schema.json")
 
+
 def load_omniscape_schema():
     return _load_schema("omniscape-schema.json")
+
 
 def _load_schema(file: str) -> dict:
     schema_path = Path(__file__).parent / "circuitscape-schema" / file
@@ -15,18 +26,29 @@ def _load_schema(file: str) -> dict:
         schema = json.load(f)
     return schema
 
+
 def load_omniscape_parameters(schema: dict) -> list[Parameter]:
-    schema['properties']['threads'] = dict(name="Number of threads", type="integer", default=1)
+    """Categorize OS parameters. This was done similarly to how they are
+    layed out in the OS documentation."""
+    schema["properties"]["threads"] = dict(
+        name="Number of threads", type="integer", default=1
+    )
 
     categories = {
-        "General": ["project_name", "resistance_file", "source_file", "radius", "block_size"],
+        "General": [
+            "project_name",
+            "resistance_file",
+            "source_file",
+            "radius",
+            "block_size",
+        ],
         "Resistance options": [
-            "resistance_is_conductance", 
+            "resistance_is_conductance",
             "source_from_resistance",
             "r_cutoff",
             "reclassify_resistance",
             "reclass_table",
-            "write_reclassified_resistance"
+            "write_reclassified_resistance",
         ],
         "Advanced options": [
             "allow_different_projections",
@@ -46,7 +68,7 @@ def load_omniscape_parameters(schema: dict) -> list[Parameter]:
             "calc_normalized_current",
             "calc_flow_potential",
             "write_raw_currmap",
-            "write_as_tif"
+            "write_as_tif",
         ],
         "Conditional options": [
             "conditional",
@@ -61,14 +83,18 @@ def load_omniscape_parameters(schema: dict) -> list[Parameter]:
             "condition2_upper",
             "compare_to_future",
             "condition1_future_file",
-            "condition2_future_file"
-        ] 
+            "condition2_future_file",
+        ],
     }
     default_categories = ["General"]
     outputs = ["project_name"]
     return _load_parameters(schema, categories, default_categories, outputs)
 
+
 def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
+    """Load and categorize CS parameters. The categories were derived from
+    the documentation but also how they were layed out in the old CS 4 GUI
+    tool."""
     categories = {
         "General": ["data_type", "scenario"],
         "Resistance options": ["habitat_file", "habitat_map_is_resistances"],
@@ -105,7 +131,9 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
     return _load_parameters(schema, categories, default_categories, outputs)
 
 
-def _load_parameters(schema, categories, default_categories, outputs) -> list[Parameter]:
+def _load_parameters(
+    schema, categories, default_categories, outputs
+) -> list[Parameter]:
     parameters = []
     for category, parameter_keys in categories.items():
         for parameter_key in parameter_keys:
@@ -119,6 +147,7 @@ def _load_parameters(schema, categories, default_categories, outputs) -> list[Pa
             )
             parameters.append(parameter)
     return parameters
+
 
 def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Parameter:
     p = Parameter(
@@ -135,6 +164,7 @@ def _load_parameter(name: str, info: dict, required: bool, **kwargs) -> Paramete
 
 
 def _get_type(info: dict) -> str:
+    """Set the (most) appropriate parameter type based on the schema types."""
     type = None
     if info["name"] == "Project name":
         type = "DEFolder"
@@ -151,7 +181,7 @@ def _get_base_type(basetype: str, default: "GPType" = str) -> str:
         # Or could be GPLong, but this handles all numbers
         number="GPDouble",
         string="GPString",
-        integer="GPLong"
+        integer="GPLong",
     )
     return lookup.get(basetype, default)
 
