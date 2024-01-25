@@ -10,14 +10,14 @@ from subprocess import Popen, PIPE, STDOUT, CREATE_NO_WINDOW
 
 
 def run_circuitscape(config_file: Path, command_args: dict, messages) -> None:
-    working_dir = Path(__file__).resolve().parent
+    working_dir = str(Path(__file__).resolve().parent).replace("\\", "/")
     config_file_fixed = str(config_file).replace("\\", "/")
     command = f'"using Pkg; Pkg.activate(realpath(\\"{working_dir}\\")); Pkg.instantiate(); using Circuitscape; compute(realpath(\\"{config_file_fixed}\\"))"'
     return run_julia_command(command, command_args, messages)
 
 
 def run_omniscape(config_file: Path, command_args: dict, messages) -> None:
-    working_dir = Path(__file__).resolve().parent
+    working_dir = str(Path(__file__).resolve().parent).replace("\\", "/")
     config_file_fixed = str(config_file).replace("\\", "/")
     command = f'"using Pkg; Pkg.activate(realpath(\\"{working_dir}\\")); Pkg.instantiate(); using Omniscape; run_omniscape(realpath(\\"{config_file_fixed}\\"))"'
 

@@ -1,4 +1,4 @@
-# Circuitscape Python Script Tool for ESRI Arc Pro
+# Circuitscape Python Script Tool for ArcGIS Pro
 
 ## Installation and Usage
 
@@ -28,18 +28,12 @@ and run via python using `subprocess.Popen`.
 ## Bugs and Caveats
 
 The limitations of Arc Pro Python script tools as well as Python <-> Julia interprocess communications necessitate
-certain limitations. Among these
-
-1. There is no way to cancel running jobs.
-   Using the 'cancel' option in a running tool is typically ineffective (Arc Pro only cancels a python script between
-   lines). To cancel a running process, you will need to exit Arc Pro completely (or kill it in task manager).
-1. Errors do not always show as failed runs in Arc Pro. To be sure, click "View Details".
-1. The tool does not respect any environment settings in Arc Pro.
+certain limitations. See [src/INSTALL.md](src/INSTALL.md) for more information.
 
 Please report other issues at
 https://github.com/jessjaco/circuitscape-arc-pro/issues.
 
 ## Acknowledgements
 
-The tool was authored by Jesse Anderson and guided by Kimberly Hall with The Nature Conservancy. Funding for this
+The tool was authored by Jesse Anderson as guided by Kimberly Hall with The Nature Conservancy. Funding for this
 project was provided by The Wilburforce Foundation.
