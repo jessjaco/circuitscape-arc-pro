@@ -6,8 +6,10 @@ or less exactly as written. The majority of the code here is to
 could be done in the schema in some way, but I think that would only be 
 needed if these categories were used somewhere else.
 """
+
 import json
 from pathlib import Path
+import warnings
 
 from arcpy import Parameter
 
@@ -96,12 +98,16 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
     the documentation but also how they were layed out in the old CS 4 GUI
     tool."""
     categories = {
-        "General": ["data_type", "scenario"],
+        "General": ["data_type", "scenario", "solver", "cholmod_batch_size"],
         "Resistance options": ["habitat_file", "habitat_map_is_resistances"],
         "Output": ["output_file", "write_cur_maps"],
-        "Pairwise options": ["point_file", "polygon_file"],
-        "Advanced options": ["source_file", "ground_file"],
-        "Logging": ["log_level", "log_file"],
+        "Pairwise options": ["point_file", "polygon_file", "use_polygons"],
+        "Advanced options": [
+            "source_file",
+            "ground_file",
+            "ground_file_is_resistances",
+        ],
+        "Logging": ["log_level", "log_file", "profiler_log_file"],
         "Calculation options": [
             "connect_four_neighbors_only",
             "connect_using_avg_resistances",
@@ -109,11 +115,18 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
             "low_memory_mode",
             "use_unit_currents",
             "use_direct_grounds",
+            "use_64bit_indexing",
+            "precision",
+            "parallelize",
+            "max_parallel",
         ],
         "Mapping options": [
+            "write_as_tif",
             "write_max_cur_maps",
             "write_cum_cur_map_only",
             "set_focal_node_currents_to_zero",
+            "set_null_currents_to_nodata",
+            "set_null_voltages_to_nodata",
             "compress_grids",
             "log_transform_maps",
         ],
@@ -124,7 +137,10 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
             "variable_source_file",
             "use_included_pairs",
             "included_pairs_file",
+            "use_reclass_table",
+            "reclass_file",
         ],
+        "Interface options": ["print_rusages", "print_timings", "suppress_messages"],
     }
     default_categories = ["General", "Resistance options", "Output"]
     outputs = ["output_file"]
@@ -146,6 +162,11 @@ def _load_parameters(
                 direction="Output" if name in outputs else None,
             )
             parameters.append(parameter)
+    schema_properties = list(schema["properties"].keys())
+    loaded_parameters = [parameter.name for parameter in parameters]
+    unloaded_parameters = [p for p in schema_properties if p not in loaded_parameters]
+    if any(unloaded_parameters):
+        warnings.warn(", ".join(unloaded_parameters) + "not loaded as options")
     return parameters
 
 

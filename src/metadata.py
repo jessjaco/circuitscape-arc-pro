@@ -12,37 +12,43 @@ https://support.esri.com/en-us/knowledge-base/how-to-clone-a-python-environment-
 4. Add what we need: `conda install xmltodict`
 5. Run this file
 """
+
 from typing import List, Dict
 from pathlib import Path
 
 from arcpy import Parameter
-from xmltodict import unparse # not in arc pro python env!
+from xmltodict import unparse  # not in arc pro python env!
 
 from parameters import (
-    load_circuitscape_parameters, 
-    load_circuitscape_schema, 
-    load_omniscape_parameters, 
-    load_omniscape_schema
+    load_circuitscape_parameters,
+    load_circuitscape_schema,
+    load_omniscape_parameters,
+    load_omniscape_schema,
 )
 
-def write_metadata(parameters: List, name: str, display_name:str, output_path: Path) -> None:
+
+def write_metadata(
+    parameters: List, name: str, display_name: str, output_path: Path
+) -> None:
     metadict = {
         "metadata": {
-            "@xml:lang":"en",
-            "tool": { 
-                "@name":name, 
+            "@xml:lang": "en",
+            "tool": {
+                "@name": name,
                 "@displayname": display_name,
                 "@toolboxalias": "Circuitscape",
                 "@xmlns": "",
-                "parameters": { "param": _parse_parameters(parameters) }
-            }
+                "parameters": {"param": _parse_parameters(parameters)},
+            },
         }
     }
     with open(output_path, "w") as dst:
         dst.write(unparse(metadict, pretty=True))
 
+
 def _parse_parameters(parameters: List) -> Dict:
     return [_parse_parameter(parameter) for parameter in parameters]
+
 
 def _parse_parameter(parameter: Parameter) -> Dict:
     return {
@@ -53,20 +59,21 @@ def _parse_parameter(parameter: Parameter) -> Dict:
         "@datatype": parameter.datatype,
         "@expression": f"{{{parameter.name}}}",
         # reverse-engineered style string from some edited metadata, all this html may not be required.
-        "dialogReference": f'<DIV STYLE="text-align:Left"><DIV><DIV><P><SPAN>{parameter.description}</SPAN></P></DIV></DIV></DIV>'
+        "dialogReference": f'<DIV STYLE="text-align:Left"><DIV><DIV><P><SPAN>{parameter.description}</SPAN></P></DIV></DIV></DIV>',
     }
+
 
 if __name__ == "__main__":
     write_metadata(
         parameters=load_circuitscape_parameters(load_circuitscape_schema()),
         name="Run_Circuitscape",
         display_name="Run Circuitscape",
-        output_path="src/Circuitscape.Run_Circuitscape.pyt.xml"
+        output_path="src/Circuitscape.Run_Circuitscape.pyt.xml",
     )
 
     write_metadata(
         parameters=load_omniscape_parameters(load_omniscape_schema()),
         name="Run_Omniscape",
         display_name="Run Omniscape",
-        output_path="src/Circuitscape.Run_Omniscape.pyt.xml"
+        output_path="src/Circuitscape.Run_Omniscape.pyt.xml",
     )

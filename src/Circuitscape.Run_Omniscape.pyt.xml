@@ -53,7 +53,7 @@
 			<param name="parallelize" displayname="Parallelize" type="Optional" direction="Input" datatype="Boolean" expression="{parallelize}">
 				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;One of true, false. Defaults to true. Specify whether to use parallel processing.&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
 			</param>
-			<param name="number_of_threads" displayname="Number of threads" type="Optional" direction="Input" datatype="Long" expression="{number_of_threads}">
+			<param name="threads" displayname="Number of threads" type="Optional" direction="Input" datatype="Long" expression="{threads}">
 				<dialogReference>&lt;DIV STYLE="text-align:Left"&gt;&lt;DIV&gt;&lt;DIV&gt;&lt;P&gt;&lt;SPAN&gt;None&lt;/SPAN&gt;&lt;/P&gt;&lt;/DIV&gt;&lt;/DIV&gt;&lt;/DIV&gt;</dialogReference>
 			</param>
 			<param name="parallel_batch_size" displayname="Parallel batch size" type="Optional" direction="Input" datatype="Double" expression="{parallel_batch_size}">
