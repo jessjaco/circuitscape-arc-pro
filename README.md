@@ -1,8 +1,18 @@
 # Circuitscape Python Script Tool for ArcGIS Pro
 
+## Overview
+
+The goal of this project is to create a Python Script Tool for ArcGIS Pro which
+provides an interface for running the current versions of
+[Circuitscape](https://github.com/Circuitscape/Circuitscape.jl) and
+[Omniscape](https://github.com/Circuitscape/Omniscape.jl).
+
+Here is a picture of the tool in action:
+![Picture of interfaces](https://raw.githubusercontent.com/jessjaco/circuitscape-arc-pro/main/docs/img/omniscape_running.png)
+
 ## Installation and Usage
 
-To install, follow instructions in [src/INSTALL.md](src/INSTALL.md).
+The latest version of the tool can be downloaded at https://github.com/jessjaco/circuitscape-arc-pro/releases/latest. To install, follow instructions in [src/INSTALL.md](src/INSTALL.md).
 
 ## Versions
 
@@ -35,5 +45,4 @@ https://github.com/jessjaco/circuitscape-arc-pro/issues.
 
 ## Acknowledgements
 
-The tool was authored by Jesse Anderson as guided by Kimberly Hall with The Nature Conservancy. Funding for this
-project was provided by The Wilburforce Foundation.
+This tool was authored by Jesse Anderson as guided by Kimberly Hall with The Nature Conservancy. It was inspired by the original ArcGIS Circuitscape tool authored by Brad McRae and Jim Platt. Funding for this project was provided by The Wilburforce Foundation. Circuitscape.jl was authored by Brad McRae, Viral Shah, Tanmay Mohapatra, and Ranjan Anantharaman. Omniscape.jl was authored by Vincent Landau.
