@@ -5,6 +5,7 @@ accessors, you could use this by itself. Another approach would be to allow
 messages to be None, and test for that before writing. Another option would be
 wrap messages in some sort of logger class and treat it like a standard logger.
 """
+
 from pathlib import Path
 from subprocess import Popen, PIPE, STDOUT, CREATE_NO_WINDOW
 
@@ -36,6 +37,7 @@ def run_julia_command(command: str, command_args: dict, messages) -> None:
         julia_command += f" --{k} {v}"
     julia_exe = working_dir / julia_command
     full_command = f"{julia_exe} -e {command}"
+    env = dict(JULIA_DEPOT_PATH=str(working_dir))
     messages.addMessage(full_command)
 
     # this pattern is necessary (bufsize, but also the context) as it's the
@@ -47,6 +49,7 @@ def run_julia_command(command: str, command_args: dict, messages) -> None:
         stderr=STDOUT,
         creationflags=CREATE_NO_WINDOW,
         bufsize=1,
+        #    env=env,
         encoding="utf-8",
     ) as proc:
         for line in proc.stdout:

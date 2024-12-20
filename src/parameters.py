@@ -101,7 +101,7 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
         "General": ["data_type", "scenario", "solver", "cholmod_batch_size"],
         "Resistance options": ["habitat_file", "habitat_map_is_resistances"],
         "Output": ["output_file", "write_cur_maps"],
-        "Pairwise options": ["point_file", "polygon_file", "use_polygons"],
+        "Pairwise options": ["point_file"],
         "Advanced options": [
             "source_file",
             "ground_file",
@@ -139,6 +139,8 @@ def load_circuitscape_parameters(schema: dict) -> list[Parameter]:
             "included_pairs_file",
             "use_reclass_table",
             "reclass_file",
+            "use_polygons",
+            "polygon_file",
         ],
         "Interface options": ["print_rusages", "print_timings", "suppress_messages"],
     }
