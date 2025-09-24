@@ -30,7 +30,7 @@ def run_julia_command(command: str, command_args: dict, messages) -> None:
 
     # The path to the julia exe itself. This needs to be changed when the
     # workflow is changed
-    julia_command = "julia-1.10.0/bin/julia.exe"
+    julia_command = "julia-1.10.10/bin/julia.exe"
 
     for k, v in command_args.items():
         # Only supports full kw args

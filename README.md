@@ -20,10 +20,10 @@ The versions of Circuitscape, Omniscape, and Julia used in this tool are defined
 and the [packaging workflow](.github/workflows/zip_release.yaml); these will be periodically updated.
 
 Since Arc Pro typically updates automatically, it is difficult to test across different versions. This tool was created
-using Arc Pro 3.x series (last tested version: 3.2.1).
+using Arc Pro 3.x series (last tested version: 3.5.3).
 
 To ease usage and maintain compatibility, Julia itself is distributed in the zip package. It is the latest
-version (currently 1.10.0) tested with the versions of Circuitscape and Omniscape included with
+version (currently 1.10.10) tested with the versions of Circuitscape and Omniscape included with
 [Project.toml](src/Project.toml).
 
 ## Program Design
